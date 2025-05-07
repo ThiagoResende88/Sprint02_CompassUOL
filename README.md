@@ -1,5 +1,7 @@
 # 🚀 WordPress com Docker na AWS | Projeto 02 - Compass Uol
 
+https://github.com/ThiagoResende88/Sprint02_CompassUOL/blob/main/prints/logocompass.png
+
 Repositório do projeto da Sprint 2 do Programa Compass UOL, com foco em deploy de uma aplicação WordPress utilizando a infraestrutura da AWS. O ambiente foi construído com boas práticas de segurança, alta disponibilidade e escalabilidade em mente, aplicando serviços como EC2, Load Balancer, RDS, EFS e Security Groups.
 
 ---
@@ -105,9 +107,13 @@ sudo mount -t efs -o tls *fs-"SEU_ID"*:/ efs
 ## ✅ Status do Projeto
 
 ✔️ Infraestrutura provisionada
+
 ✔️ Docker funcionando corretamente
+
 ✔️ WordPress acessível via Load Balancer
+
 ✔️ Conexão com RDS testada
+
 ✔️ EFS montado e funcional
 
 ---
@@ -121,7 +127,9 @@ Durante o desenvolvimento desse projeto, foram colocados em prática diversos co
 ## 👤 Autor
 
 **Thiago Dias Resende**
+
 📧 [thiago.resende.pb@compasso.com.br](mailto:thiago.resende.pb@compasso.com.br)
+
 💼 [LinkedIn](https://www.linkedin.com/in/seu-perfil)
 
 ---
