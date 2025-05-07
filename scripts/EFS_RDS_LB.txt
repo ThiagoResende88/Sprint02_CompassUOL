@@ -1,9 +1,1 @@
-EFS:
 
-sudo mount -t efs -o tls fs-053d3daa02230bc15:/ efs
-
-RDS:
-wordpress-db.cvywwg4swlx6.sa-east-1.rds.amazonaws.com
-
-LB:
-lb-wp-1069737639.sa-east-1.elb.amazonaws.com
