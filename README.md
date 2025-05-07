@@ -124,7 +124,9 @@ Durante o desenvolvimento desse projeto, foram colocados em prática diversos co
 
 ## 📷 Imagens
 
-(Prints)[https://github.com/ThiagoResende88/Sprint02_CompassUOL/tree/main/prints]
+[Prints](https://github.com/ThiagoResende88/Sprint02_CompassUOL/tree/main/prints)
+
+---
 
 ## 👤 Autor
 
