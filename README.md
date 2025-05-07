@@ -1,146 +1,133 @@
-# WordPress na AWS com Docker | Projeto PB - Compass Uol
+# 🚀 WordPress com Docker na AWS | Projeto 02 - Compass Uol
 
-## Etapa 1: Configuração da VPC e Rede
+Repositório do projeto da Sprint 2 do Programa Compass UOL, com foco em deploy de uma aplicação WordPress utilizando a infraestrutura da AWS. O ambiente foi construído com boas práticas de segurança, alta disponibilidade e escalabilidade em mente, aplicando serviços como EC2, Load Balancer, RDS, EFS e Security Groups.
 
-Vamos começar pela infraestrutura base na AWS:
+---
 
-1. **Criar VPC**:
-   - Nome: WordPress-VPC
-   - CIDR: 10.0.0.0/16
-   - Habilitar DNS hostnames e suporte DNS
+## 🛠️ Tecnologias e Ferramentas
 
-2. **Criar Subnets**:
-   - 2 Subnets públicas (diferentes AZs):
-     - Public-Subnet-1: 10.0.1.0/24 (AZ-a)
-     - Public-Subnet-2: 10.0.2.0/24 (AZ-b)
-   - 2 Subnets privadas (para o RDS):
-     - Private-Subnet-1: 10.0.3.0/24 (AZ-a)
-     - Private-Subnet-2: 10.0.4.0/24 (AZ-b)
+- **Docker & Docker Compose**
+- **Amazon EC2**
+- **Amazon RDS (MySQL)**
+- **Amazon EFS**
+- **Elastic Load Balancer**
+- **Security Groups**
+- **WordPress**
+- **Linux (Ubuntu 22.04)**
+- **Shell Script**
 
-3. **Configurar Internet Gateway**:
-   - Criar Internet Gateway
-   - Anexar à VPC
+---
 
-4. **Configurar Tabelas de Roteamento**:
-   - Criar route table pública
-   - Adicionar rota 0.0.0.0/0 apontando para o Internet Gateway
-   - Associar às subnets públicas
+## 📌 Estrutura da Solução
 
-## Etapa 2: Configuração dos Security Groups
+A arquitetura do projeto foi construída conforme o diagrama abaixo (resumidamente):
 
-1. **Security Group para EC2/Docker**:
-   - Nome: WordPress-EC2-SG
-   - Permitir entrada: SSH (22), HTTP (80), HTTP (8080)
-   - Permitir saída: All traffic
+- 1 instância EC2 com Docker rodando WordPress + PHP + Apache
+- Banco de dados gerenciado com Amazon RDS (MySQL)
+- Sistema de arquivos persistente com Amazon EFS
+- Balanceador de carga (ELB) distribuindo requisições
+- Grupos de segurança configurados para acesso seguro (SSH e HTTP)
 
-2. **Security Group para RDS**:
-   - Nome: WordPress-RDS-SG
-   - Permitir entrada: MySQL (3306) apenas do WordPress-EC2-SG
-   - Permitir saída: All traffic
+---
 
-3. **Security Group para EFS**:
-   - Nome: WordPress-EFS-SG
-   - Permitir entrada: NFS (2049) apenas do WordPress-EC2-SG
-   - Permitir saída: All traffic
+## ⚙️ Pré-requisitos
 
-## Etapa 3: Criação do EFS
+Antes de rodar o projeto, você precisa ter:
 
-1. **Criar o EFS**:
-   - Nome: WordPress-EFS
-   - VPC: WordPress-VPC
-   - Security Group: WordPress-EFS-SG
-   - Criar mount targets nas duas subnets públicas
+- Conta AWS ativa
+- Chave de acesso EC2 (`.pem`)
+- Docker e Docker Compose instalados
+- Permissões adequadas em Security Groups
+- Acesso liberado no Load Balancer (porta 80)
 
-## Etapa 4: Configuração do RDS
+---
 
-1. **Criar Subnet Group para RDS**:
-   - Nome: WordPress-DB-Subnet-Group
-   - Adicionar as duas subnets privadas
+## 📦 Instalação e Deploy
 
-2. **Criar Instância RDS**:
-   - Engine: MySQL 8.0
-   - Classe: db.t2.micro (free tier)
-   - Storage: 20GB GP2
-   - Multi-AZ: Desativado (economizar custos)
-   - Nome do DB: wordpress
-   - User/Password: Configurar
-   - VPC: WordPress-VPC
-   - Subnet Group: WordPress-DB-Subnet-Group
-   - Security Group: WordPress-RDS-SG
-   - Publicly accessible: Não
+1. Clone o repositório:
 
-## Etapa 5: Configuração da Instância EC2
+```bash
+git clone https://github.com/ThiagoResende88/Sprint02_CompassUOL.git
+cd seu-repo
+```
 
-1. **Criar Instância EC2**:
-   - AMI: Amazon Linux 2 ou Ubuntu Server
-   - Tipo: t2.micro
-   - VPC: WordPress-VPC
-   - Subnet: Public-Subnet-1
-   - Auto-assign Public IP: Sim
-   - Security Group: WordPress-EC2-SG
-   - Storage: 8GB gp2
-   - User Data Script:
+2. Acesse a instância EC2 via SSH:
 
-## Etapa 6: Configuração do Load Balancer
+```bash
+ssh -i WP-Key.pem ec2-user@<IP_PÚBLICO_EC2>
+```
 
-1. **Criar Classic Load Balancer**:
-   - Nome: WordPress-LB
-   - VPC: WordPress-VPC
-   - Subnets: Public-Subnet-1, Public-Subnet-2
-   - Security Group: WordPress-EC2-SG
-   - Listener: HTTP (80)
-   - Health Check: HTTP, porta 80, caminho "/"
-   - Adicionar EC2 instance como target
+3. Suba o ambiente com Docker Compose:
 
-## Etapa 7: Configuração do WordPress com Docker
+```bash
+docker-compose up -d
+```
 
-Depois que a infraestrutura estiver pronta, você precisará conectar à instância EC2 e configurar o Docker Compose adequadamente para apontar para o seu RDS.
+4. Acesse via navegador:
 
-1. **Conectar à EC2** (substitua os valores):
-   ```bash
-   ssh -i "sua-chave.pem" ec2-user@ec2-public-ip
-   ```
+```bash
+http://<DNS_DO_LOAD_BALANCER>
+```
 
-2. **Atualizar o docker-compose.yml**:
+---
 
-3. **Iniciar o container**:
-   ```bash
-   cd ~/wordpress
-   docker-compose up -d
-   ```
+## 💾 Banco de Dados (RDS)
 
-## Etapa 8: Teste e Verificação
+* **Endpoint**: `wordpress-db.*"SUA_KEY"*.sa-east-1.rds.amazonaws.com`
+* **Usuário**: admin (ou outro, definido no `.env`)
+* **Porta**: 3306
 
-1. **Testar acesso ao WordPress**:
-   - Acesse o DNS do Load Balancer no navegador
-   - Complete a configuração inicial do WordPress
-   - Verificar se consegue fazer upload de mídia (teste do EFS)
+O banco foi configurado para aceitar conexões da instância EC2 com a porta 3306 liberada no SG.
 
-2. **Verificar logs**:
-   ```bash
-   docker-compose logs -f
-   ```
+---
 
-## Etapa 9: Documentação
+## 📁 Armazenamento (EFS)
 
-Crie uma documentação completa da sua solução, incluindo:
+* O EFS foi montado via:
 
-1. **Diagrama da arquitetura**
-2. **Procedimentos de instalação**
-3. **Configurações realizadas**
-4. **Comandos utilizados**
-5. **Testes realizados**
-6. **Problemas enfrentados e soluções**
+```bash
+sudo mount -t efs -o tls *fs-"SEU_ID"*:/ efs
+```
 
-# Implementação via CloudFormation
+* Utilizado para armazenar arquivos persistentes do WordPress (plugins, uploads, etc).
 
-Se preferir automatizar todo esse processo, você pode usar o template de CloudFormation que compartilhei anteriormente. Nesse caso, os passos seriam:
+---
 
-1. Acessar o AWS Console > CloudFormation
-2. Criar stack > Com novo template
-3. Fazer upload do arquivo YAML
-4. Preencher os parâmetros (KeyName, InstanceType, etc.)
-5. Avançar, revisar e criar stack
-6. Esperar a criação de todos os recursos
-7. Acessar a URL do WordPress (disponível nos outputs da stack)
+## 🔐 Segurança
 
+* Acesso SSH restrito ao IP Local: `179.109.93.91/32`
+* Porta 80 aberta para a internet (`0.0.0.0/0`)
+* Acesso ao RDS restrito ao security group da EC2
+* Senhas e variáveis sensíveis armazenadas em arquivos `.env` (não versionados)
+
+---
+
+## ✅ Status do Projeto
+
+✔️ Infraestrutura provisionada
+✔️ Docker funcionando corretamente
+✔️ WordPress acessível via Load Balancer
+✔️ Conexão com RDS testada
+✔️ EFS montado e funcional
+
+---
+
+## 📚 Aprendizados
+
+Durante o desenvolvimento desse projeto, foram colocados em prática diversos conceitos de cloud computing, segurança em infraestrutura, deploy com containers e boas práticas com Docker e AWS. A atividade reforçou a importância de automação, controle de acesso e persistência de dados em ambientes escaláveis.
+
+---
+
+## 👤 Autor
+
+**Thiago Dias Resende**
+📧 [thiago.resende.pb@compasso.com.br](mailto:thiago.resende.pb@compasso.com.br)
+💼 [LinkedIn](https://www.linkedin.com/in/seu-perfil)
+
+---
+
+## 📝 Licença
+
+Este projeto é parte do programa de treinamento da [Compass UOL](https://compass.uol). Uso restrito a fins educacionais.
+
+---
