@@ -1,6 +1,6 @@
 # 🚀 WordPress com Docker na AWS | Projeto 02 - Compass Uol
 
-[logocompass](https://github.com/user-attachments/assets/d66a036e-e4a2-4c5f-b641-2a35b111c833)
+https://github.com/user-attachments/assets/d66a036e-e4a2-4c5f-b641-2a35b111c833
 
 Repositório do projeto da Sprint 2 do Programa Compass UOL, com foco em deploy de uma aplicação WordPress utilizando a infraestrutura da AWS. O ambiente foi construído com boas práticas de segurança, alta disponibilidade e escalabilidade em mente, aplicando serviços como EC2, Load Balancer, RDS, EFS e Security Groups.
 
